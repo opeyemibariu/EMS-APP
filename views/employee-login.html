@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+      }
+      .container-lg {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .box-lg {
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        width: 320px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .box-lg h2 {
+        margin-bottom: 20px;
+      }
+      .input-lg {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      .btn-lg {
+        width: 100%;
+        padding: 12px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .btn-lg:hover {
+        background: #333;
+      }
+      .switch-lg {
+        margin-top: 15px;
+        font-size: 14px;
+      }
+      .switch-lg a {
+        color: #e53935;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-lg">
+      <div class="box-lg">
+        <h2>Employee Login</h2>
+        <form id="loginForm">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            class="input-lg"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            class="input-lg"
+            required
+          />
+          <button type="submit" class="btn-lg">Login</button>
+        </form>
+        <p class="switch-lg">
+          Are you an employer?
+          <a href="/employer-login">Login here</a>
+        </p>
+        <p class="switch-lg">
+          Don't have an account?
+          <a href="/employer-register">Register here(Employer Only)</a>
+        </p>
+      </div>
+    <script>
+      const form = document.getElementById("loginForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = form.email.value;
+        const password2 = form.password.value;
+        const res = await fetch("auth/login-employee", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password2 }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          window.location.href = "/employee";
+        } else {
+          alert(data.message);
+        }
+      });
+    </script>
+  </body>
+</html>

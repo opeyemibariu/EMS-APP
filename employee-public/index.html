@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background: #f4f4f4;
+      }
+      .container {
+        padding: 20px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+      }
+      button {
+        padding: 10px 15px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Employee Dashboard</h2>
+        <button id="logoutBtn">Logout</button>
+      </div>
+      <div class="card">
+        <h3>Welcome</h3>
+        <p id="employeeName">Loading...</p>
+      </div>
+      <div class="card">
+        <h3>Your Details</h3>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Role:</strong> <span id="role"></span></p>
+        <p><strong>Status:</strong> <span id="status"></span></p>
+        <p><strong>Phone:</strong> <span id="phone"></span></p>
+        <p><strong>Address:</strong> <span id="address"></span></p>
+        <p><strong>week rating:</strong> <span id="wkratings"></span></p>
+      </div>
+    </div>
+    <script>
+      // 🔐 Check auth + fetch employee data
+      async function loadDashboard() {
+        try {
+          const res = await fetch("api/workers/employee/me", {
+            credentials: "include",
+          });
+          if (!res.ok) {
+            window.location.href = "/login";
+            return;
+          }
+          const data = await res.json();
+          document.getElementById("employeeName").textContent = data.name;
+          document.getElementById("email").textContent = data.email;
+          document.getElementById("role").textContent = data.role;
+          document.getElementById("status").textContent = data.status;
+          document.getElementById("phone").textContent = data.phone;
+          document.getElementById("address").textContent = data.address;
+          document.getElementById("wkratings").textContent = data.wkratings;
+        } catch (err) {
+          console.error(err);
+          window.location.href = "/login";
+        }
+      }
+      loadDashboard();
+      // 🚪 Logout
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          try {
+            const res = await fetch("auth/logout-employee", {
+              method: "POST",
+              credentials: "include",
+            });
+            const data = await res.json();
+            alert(data.message); // 👈 show backend message
+            window.location.replace("/login");
+          } catch (err) {
+            console.error(err);
+            alert("Logout failed");
+          }
+        });
+    </script>
+  </body>
+</html>
